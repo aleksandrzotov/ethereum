@@ -1,6 +1,8 @@
-function f(a) {
-  const b = 1;
-  return a + b;
-}
+const app = require('./src/app');
 
-console.log(f(1));
+const port = 9000;
+const hostName = '0.0.0.0';
+
+app.listen(port, hostName, () => {
+  console.log(`Server running at http://${hostName}:${port}/`);
+});
