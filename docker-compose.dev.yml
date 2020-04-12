@@ -11,7 +11,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./src:/webportal_server/src
+      - ./src:/ethereum-server/src
   db:
     image: postgres:11.1
     restart: always
