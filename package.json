@@ -8,7 +8,9 @@
   },
   "author": "Aleksand Zotov",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  },
   "devDependencies": {
     "babel-eslint": "^8.2.2",
     "eslint": "^4.19.1",
