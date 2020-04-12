@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 const LAST_BLOCK_TAG_URL = 'https://api.etherscan.io/api?module=proxy&action=eth_blockNumber';
-const BLOCKS_AMOUNT = 3;
+const BLOCKS_AMOUNT = 100;
 const API_KEY = 'M9TN6H9RS2SX5IJDCM1S59ZDCP384NJWKE';
 
 const recipientsProfit = new Map();
@@ -24,12 +24,31 @@ async function getLastsBlockTags(amount) {
 }
 
 async function getLastBlocksData(tags) {
-  return Promise.all(
-    tags.map(tag => {
-      const url = `https://api.etherscan.io/api?module=proxy&action=eth_getBlockByNumber&tag=${tag}&boolean=true&apikey=${API_KEY}`;
-      return getData(url);
-    })
-  );
+  // On a large number of blocks, the API starts to
+  // return a message that the request limit has been reached:
+  // "Max rate limit reached"
+  // Otherwise, it would be convenient to use Promise.all like this:
+
+  // return Promise.all(
+  //   tags.map(tag => {
+  //     const url = `https://api.etherscan.io/api?module=proxy&action=eth_getBlockByNumber&tag=${tag}&boolean=true&apikey=${API_KEY}`;
+  //     return getData(url);
+  //   })
+  // ).catch(e => {
+  //   console.log('getLastBlocksData error', e);
+  //   throw e;
+  // });
+
+  const blocks = [];
+  for (let i = 0; i < tags.length; i++) {
+    const url = `https://api.etherscan.io/api?module=proxy&action=eth_getBlockByNumber&tag=${
+      tags[i]
+    }&boolean=true&apikey=${API_KEY}`;
+    const block = await getData(url);
+    blocks.push(block);
+    console.log(`block with number ${i} was received`);
+  }
+  return blocks;
 }
 
 function transactionDataSave(transaction) {
@@ -45,8 +64,12 @@ function transactionDataSave(transaction) {
 
 function blocksDataSave(blocks) {
   blocks.forEach(block => {
-    const { transactions } = block.result;
-    transactions.forEach(transaction => transactionDataSave(transaction));
+    if (block.result && block.result.transactions) {
+      const { transactions } = block.result;
+      transactions.forEach(transaction => transactionDataSave(transaction));
+    } else {
+      console.log('recieved bad block');
+    }
   });
 }
 
@@ -57,7 +80,9 @@ async function searchRichestRecipient() {
   const richestRecipient = [...recipientsProfit.entries()].reduce(
     (acc, recipient) => (recipient[1] > acc[1] ? recipient : acc)
   );
-  console.log(richestRecipient);
+  const [recipient, profit] = richestRecipient;
+  console.log(`Richest recipient by last ${BLOCKS_AMOUNT} blocks - ${recipient}`);
+  console.log(`His profit was ${profit}`);
 }
 
 searchRichestRecipient();
