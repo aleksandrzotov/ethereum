@@ -1,0 +1,12 @@
+version: '3'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    image: ethereum-server:latest
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./src:/webportal_server/src
