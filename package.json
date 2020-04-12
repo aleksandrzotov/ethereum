@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "db-init": "sequelize db:create && sequelize db:migrate",
+    "db-migrate": "sequelize db:migrate",
     "start": "nodemon index.js"
   },
   "author": "Aleksand Zotov",
@@ -11,6 +13,8 @@
   "dependencies": {
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",
+    "pg": "^7.4.1",
+    "pg-hstore": "^2.3.2",
     "sequelize": "^5.21.6",
     "sequelize-cli": "^5.5.1"
   },

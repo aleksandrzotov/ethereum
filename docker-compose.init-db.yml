@@ -1,0 +1,11 @@
+version: '3'
+services:
+  init-db:
+    build:
+      context: .
+      dockerfile: init-db.Dockerfile
+    image: init-db:latest
+    ports:
+      - "9022:9002"
+    volumes:
+      - ./:/init-db
