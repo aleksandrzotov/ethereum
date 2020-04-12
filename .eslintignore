@@ -1,2 +1,5 @@
+.git
 node_modules
+pgdata
 .DS_Store
+package-lock.json
