@@ -1,8 +1,9 @@
 const fetch = require('node-fetch');
 
+const { API_KEY } = require('./config');
+
 const LAST_BLOCK_TAG_URL = 'https://api.etherscan.io/api?module=proxy&action=eth_blockNumber';
 const BLOCKS_AMOUNT = 100;
-const API_KEY = 'M9TN6H9RS2SX5IJDCM1S59ZDCP384NJWKE';
 
 const recipientsProfit = new Map();
 
