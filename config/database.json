@@ -1,0 +1,10 @@
+{
+  "username": "postgres",
+  "password": "1234",
+  "database": "ethereum",
+  "host": "db",
+  "port": 5432,
+  "dialect": "postgres",
+  "logging": false,
+  "operatorsAliases": false
+}
