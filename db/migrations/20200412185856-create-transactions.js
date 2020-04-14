@@ -7,20 +7,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      blocksNumber: {
-        type: Sequelize.INTEGER,
-        unique: true,
-      },
+      blocksNumber: Sequelize.INTEGER,
       recipient: Sequelize.STRING,
-      profit: Sequelize.INTEGER,
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
+      profit: Sequelize.STRING,
+      createdAt: Sequelize.DATE,
+      updatedAt: Sequelize.DATE,
     }),
   down: queryInterface => queryInterface.dropTable('Transactions'),
 };
