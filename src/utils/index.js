@@ -1,5 +1,8 @@
 const fetch = require('node-fetch');
-const { API_KEY, LAST_BLOCK_TAG_URL } = require('../../config');
+const { API_KEY, START_TAG } = require('../../config');
+const { Transactions } = require('../models');
+
+const LAST_BLOCK_TAG_URL = 'https://api.etherscan.io/api?module=proxy&action=eth_blockNumber';
 
 async function getData(url) {
   const res = await fetch(url);
@@ -13,7 +16,7 @@ function constructGetBlockUrl(tag, apiKey) {
 }
 
 async function getBlocksData(tags) {
-  // On a large number of blocks, the API starts to
+  // On a large amount of blocks, the API starts to
   // return a message that the request limit has been reached:
   // "Max rate limit reached"
   // Otherwise, it would be convenient to use Promise.all like this:
@@ -79,8 +82,23 @@ async function getLastTransactions(startTag) {
   return transactions;
 }
 
+async function saveTransactionToDB(transactions) {
+  try {
+    await Transactions.bulkCreate(transactions);
+  } catch (error) {
+    console.log('Error occurred while saving transactions to the database', error);
+  }
+}
+
+async function updateTransactionsInDB() {
+  const transactions = await getLastTransactions(START_TAG);
+  await saveTransactionToDB(transactions);
+}
+
 module.exports = {
   getData,
   getLastTransactions,
   getTransactionsByTags,
+  saveTransactionToDB,
+  updateTransactionsInDB,
 };
