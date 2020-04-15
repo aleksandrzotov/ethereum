@@ -1,4 +1,4 @@
-const { getData, getTransactionsByTags } = require('./src/utils');
+const { getData, getTransactionsByTags, getRichestRecipient } = require('./src/utils');
 const { BLOCKS_AMOUNT } = require('./config');
 
 const LAST_BLOCK_TAG_URL = 'https://api.etherscan.io/api?module=proxy&action=eth_blockNumber';
@@ -13,26 +13,11 @@ async function getLastsBlockTags(amount) {
   return tags;
 }
 
-function transactionDataSave(transaction, recipientsProfit) {
-  const { recipient, profit } = transaction;
-  if (recipientsProfit.has(recipient)) {
-    const oldValue = recipientsProfit.get(recipient);
-    recipientsProfit.set(recipient, oldValue + profit);
-  } else {
-    recipientsProfit.set(recipient, profit);
-  }
-}
-
 async function searchRichestRecipient() {
   const tags = await getLastsBlockTags(BLOCKS_AMOUNT);
   const transactions = await getTransactionsByTags(tags);
 
-  const recipientsProfit = new Map();
-  transactions.forEach(transaction => transactionDataSave(transaction, recipientsProfit));
-
-  const richestRecipient = [...recipientsProfit.entries()].reduce(
-    (acc, recipient) => (recipient[1] > acc[1] ? recipient : acc)
-  );
+  const richestRecipient = getRichestRecipient(transactions);
 
   const [recipient, profit] = richestRecipient;
   console.log(`Richest recipient by last ${BLOCKS_AMOUNT} blocks - ${recipient}`);

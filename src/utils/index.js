@@ -116,9 +116,27 @@ async function updateTransactionsInDB() {
   await addLastTransactionsToDB(startTag);
 }
 
+function getRichestRecipient(transactions) {
+  const recipientsProfit = new Map();
+  transactions.forEach(transaction => {
+    const { recipient, profit } = transaction;
+    if (recipientsProfit.has(recipient)) {
+      const oldValue = recipientsProfit.get(recipient);
+      recipientsProfit.set(recipient, oldValue + profit);
+    } else {
+      recipientsProfit.set(recipient, profit);
+    }
+  });
+  const richestRecipient = [...recipientsProfit.entries()].reduce(
+    (acc, recipient) => (recipient[1] > acc[1] ? recipient : acc)
+  );
+  return richestRecipient;
+}
+
 module.exports = {
   getData,
   getLastTransactions,
   getTransactionsByTags,
   updateTransactionsInDB,
+  getRichestRecipient,
 };
