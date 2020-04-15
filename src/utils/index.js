@@ -109,11 +109,15 @@ async function addLastTransactionsToDB(startTag) {
 }
 
 async function updateTransactionsInDB() {
-  let startTag = await getLastTagFromDB();
-  if (!startTag) {
-    startTag = START_TAG;
+  try {
+    let startTag = await getLastTagFromDB();
+    if (!startTag) {
+      startTag = START_TAG;
+    }
+    await addLastTransactionsToDB(startTag);
+  } catch (error) {
+    console.log('Error while updating the database', error);
   }
-  await addLastTransactionsToDB(startTag);
 }
 
 function getRichestRecipient(transactions) {

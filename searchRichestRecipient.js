@@ -14,14 +14,18 @@ async function getLastsBlockTags(amount) {
 }
 
 async function searchRichestRecipient() {
-  const tags = await getLastsBlockTags(BLOCKS_AMOUNT);
-  const transactions = await getTransactionsByTags(tags);
+  try {
+    const tags = await getLastsBlockTags(BLOCKS_AMOUNT);
+    const transactions = await getTransactionsByTags(tags);
 
-  const richestRecipient = getRichestRecipient(transactions);
+    const richestRecipient = getRichestRecipient(transactions);
 
-  const [recipient, profit] = richestRecipient;
-  console.log(`Richest recipient by last ${BLOCKS_AMOUNT} blocks - ${recipient}`);
-  console.log(`His profit was ${profit}`);
+    const [recipient, profit] = richestRecipient;
+    console.log(`Richest recipient by last ${BLOCKS_AMOUNT} blocks - ${recipient}`);
+    console.log(`His profit was ${profit}`);
+  } catch (error) {
+    console.log('Error during calculations richest recipient', error);
+  }
 }
 
 searchRichestRecipient();
