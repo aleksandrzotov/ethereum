@@ -2,9 +2,9 @@ module.exports = (sequelize, DataTypes) => {
   const Transactions = sequelize.define(
     'Transactions',
     {
-      blocksNumber: DataTypes.INTEGER,
+      blockNumber: DataTypes.BIGINT,
       recipient: DataTypes.STRING,
-      profit: DataTypes.STRING,
+      profit: DataTypes.DECIMAL(50),
     },
     {}
   );

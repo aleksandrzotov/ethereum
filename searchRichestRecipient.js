@@ -1,5 +1,7 @@
 const { getData, getTransactionsByTags } = require('./src/utils');
-const { LAST_BLOCK_TAG_URL, BLOCKS_AMOUNT } = require('./config');
+const { BLOCKS_AMOUNT } = require('./config');
+
+const LAST_BLOCK_TAG_URL = 'https://api.etherscan.io/api?module=proxy&action=eth_blockNumber';
 
 async function getLastsBlockTags(amount) {
   const lastBlock = await getData(LAST_BLOCK_TAG_URL);

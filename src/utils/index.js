@@ -82,7 +82,7 @@ async function getLastTransactions(startTag) {
   return transactions;
 }
 
-async function saveTransactionToDB(transactions) {
+async function saveTransactionsToDB(transactions) {
   try {
     await Transactions.bulkCreate(transactions);
   } catch (error) {
@@ -90,15 +90,30 @@ async function saveTransactionToDB(transactions) {
   }
 }
 
-async function updateTransactionsInDB() {
-  const transactions = await getLastTransactions(START_TAG);
-  await saveTransactionToDB(transactions);
+async function getLastTagFromDB() {
+  const lastTag = await Transactions.max('blockNumber');
+  return lastTag;
+}
+
+async function addLastTransactionsToDB(startTag) {
+  console.log(`Run adding transactions starting ${startTag} block`);
+  const transactions = await getLastTransactions(startTag);
+  await saveTransactionsToDB(transactions);
+}
+
+async function initDB() {
+  await addLastTransactionsToDB(START_TAG);
+}
+
+async function intervalUpdateDB() {
+  const startTag = await getLastTagFromDB();
+  await addLastTransactionsToDB(startTag);
 }
 
 module.exports = {
   getData,
   getLastTransactions,
   getTransactionsByTags,
-  saveTransactionToDB,
-  updateTransactionsInDB,
+  initDB,
+  intervalUpdateDB,
 };
