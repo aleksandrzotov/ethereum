@@ -108,12 +108,11 @@ async function addLastTransactionsToDB(startTag) {
   await saveTransactionsToDB(transactions);
 }
 
-async function initDB() {
-  await addLastTransactionsToDB(START_TAG);
-}
-
-async function intervalUpdateDB() {
-  const startTag = await getLastTagFromDB();
+async function updateTransactionsInDB() {
+  let startTag = await getLastTagFromDB();
+  if (!startTag) {
+    startTag = START_TAG;
+  }
   await addLastTransactionsToDB(startTag);
 }
 
@@ -121,6 +120,5 @@ module.exports = {
   getData,
   getLastTransactions,
   getTransactionsByTags,
-  initDB,
-  intervalUpdateDB,
+  updateTransactionsInDB,
 };

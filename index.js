@@ -1,7 +1,7 @@
 const app = require('./src/app');
 const db = require('./src/models');
 const { DB_UPDATE_INTERVAL } = require('./config');
-const { initDB, intervalUpdateDB } = require('./src/utils');
+const { updateTransactionsInDB } = require('./src/utils');
 
 let updaterDB;
 
@@ -18,8 +18,8 @@ function databaseConnect() {
     .then(() => {
       console.log('Connection to the database has been established successfully.');
 
-      initDB().then(() => {
-        updaterDB = setInterval(intervalUpdateDB, DB_UPDATE_INTERVAL);
+      updateTransactionsInDB().then(() => {
+        updaterDB = setInterval(updateTransactionsInDB, DB_UPDATE_INTERVAL);
       });
     })
     .catch(err => {
